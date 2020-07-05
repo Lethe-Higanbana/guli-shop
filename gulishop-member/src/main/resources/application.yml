@@ -11,11 +11,11 @@ spring:
         server-addr: 127.0.0.1:8848
 
   application:
-    name: gulimall-member
+    name: gulishop-member
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
     db-config:
       id-type: auto
 server:
-  port: 8000
+  port: 8002
