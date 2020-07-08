@@ -2,7 +2,7 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://192.168.111.128:3306/gulishop_pms
+    url: jdbc:mysql://192.168.111.128:3306/gulishop_pms?characterEncoding=utf8&useSSL=true
     driver-class-name: com.mysql.jdbc.Driver
   cloud:
     nacos:
@@ -10,6 +10,8 @@ spring:
         server-addr: 127.0.0.1:8848
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  application:
+    name: gulishop-product
 
 
 mybatis-plus:
@@ -17,8 +19,8 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
-      logic-delete-value: 1
-      logic-not-delete-value: 0
+      logic-delete-value: 1  #逻辑删除，1表示删除
+      logic-not-delete-value: 0  #逻辑删除，0表示未删除
 server:
   port: 10000
 logging:
