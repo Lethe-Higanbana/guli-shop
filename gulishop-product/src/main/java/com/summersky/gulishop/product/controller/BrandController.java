@@ -3,6 +3,7 @@ package com.summersky.gulishop.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.summersky.common.valid.UpdateGroup;
 import com.summersky.common.valid.UpdateStatusGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +18,7 @@ import com.summersky.gulishop.product.service.BrandService;
 import com.summersky.common.utils.PageUtils;
 import com.summersky.common.utils.R;
 
+import javax.validation.Valid;
 
 
 /**
@@ -60,7 +62,7 @@ public class BrandController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:brand:save")
-    public R save(@RequestBody BrandEntity brand){
+    public R save(@Valid @RequestBody BrandEntity brand){
 		brandService.save(brand);
         System.out.println(brand.getName());
         return R.ok();
@@ -68,10 +70,11 @@ public class BrandController {
 
     /**
      * 修改
+     * @Validated({UpdateGroup.class}):分组校验，指定分组，不指定不生效
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:brand:update")
-    public R update(@RequestBody BrandEntity brand){
+    public R update(@Validated({UpdateGroup.class}) @RequestBody BrandEntity brand){
 		brandService.updateById(brand);
         System.out.println(brand.getName());
 
