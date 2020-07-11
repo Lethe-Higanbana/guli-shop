@@ -34,4 +34,9 @@ public class ProductAttrValueServiceImpl extends ServiceImpl<ProductAttrValueDao
         return entities;
     }
 
+    @Override
+    public void saveProductAttr(List<ProductAttrValueEntity> collect) {
+        this.saveBatch(collect);
+    }
+
 }

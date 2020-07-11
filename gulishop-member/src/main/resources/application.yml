@@ -2,7 +2,7 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://192.168.111.128:3306/gulishop_ums
+    url: jdbc:mysql://192.168.111.128:3306/gulishop_ums?characterEncoding=utf8&useSSL=true
     driver-class-name: com.mysql.jdbc.Driver
 
   cloud:

@@ -13,6 +13,9 @@ import com.summersky.gulishop.product.entity.SpuInfoDescEntity;
 import com.summersky.gulishop.product.service.SpuInfoDescService;
 
 
+/**
+ * @author Lenovo
+ */
 @Service("spuInfoDescService")
 public class SpuInfoDescServiceImpl extends ServiceImpl<SpuInfoDescDao, SpuInfoDescEntity> implements SpuInfoDescService {
 
@@ -24,6 +27,11 @@ public class SpuInfoDescServiceImpl extends ServiceImpl<SpuInfoDescDao, SpuInfoD
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public void saveSpuInfoDesc(SpuInfoDescEntity descEntity) {
+        this.baseMapper.insert(descEntity);
     }
 
 }
