@@ -18,6 +18,9 @@ import com.summersky.gulishop.product.service.ProductAttrValueService;
 import org.springframework.transaction.annotation.Transactional;
 
 
+/**
+ * @author Lenovo
+ */
 @Service("productAttrValueService")
 public class ProductAttrValueServiceImpl extends ServiceImpl<ProductAttrValueDao, ProductAttrValueEntity> implements ProductAttrValueService {
 
