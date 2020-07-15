@@ -1,6 +1,8 @@
 package com.summersky.gulisop.search.config;
 
 import org.apache.http.HttpHost;
+import org.elasticsearch.client.HttpAsyncResponseConsumerFactory;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;
@@ -31,4 +33,15 @@ public class GulishopElasticSearchConfig {
         );
         return client;
     }
+
+
+    public static final RequestOptions COMMON_OPTIONS;
+    static {
+        RequestOptions.Builder builder = RequestOptions.DEFAULT.toBuilder();
+        /*builder.addHeader("",""+TOKEN);
+        builder.setHttpAsyncResponseConsumerFactory(
+                new HttpAsyncResponseConsumerFactory.HeapBufferedResponseConsumerFactory();*/
+        COMMON_OPTIONS = builder.build();
+    }
+
 }

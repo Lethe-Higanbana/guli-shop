@@ -2,6 +2,7 @@ package com.summersky.gulishop.product.service.impl;
 
 import com.summersky.common.to.SkuReductionTo;
 import com.summersky.common.to.SpuBoundTo;
+import com.summersky.common.to.es.SkuEsModel;
 import com.summersky.common.utils.R;
 import com.summersky.gulishop.product.entity.*;
 import com.summersky.gulishop.product.feign.CouponFeignService;
@@ -12,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -53,6 +52,12 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Autowired
     CouponFeignService couponFeignService;
+
+    @Autowired
+    BrandService brandService;
+
+    @Autowired
+    CategoryService categoryService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -228,6 +233,63 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public void up(Long spuId) {
+        // ArrayList<SkuEsModel> uoProducts = new ArrayList<>();
+        // 查出当前spuId下的所有sku信息，品牌名字
+        List<SkuInfoEntity> skus = skuInfoService.getSkusBySpuId(spuId);
+
+        // TODO 查询当前sku的所有可以被用来检索的规格属性
+        // 拿到所有sku属性
+        List<ProductAttrValueEntity> baseAttrs = attrValueService.baseAttrlistforspu(spuId);
+        List<Long> attrIds = baseAttrs.stream().map(attr ->{
+            return attr.getAttrId();
+        }).collect(Collectors.toList());
+
+        // 过滤出es的检索属性
+        List<Long> searchAttrs = attrService.selectSearchAttrs(attrIds);
+        HashSet<Long> idSet = new HashSet<>(searchAttrs);
+        List<SkuEsModel.Attrs> attrsList =  baseAttrs.stream().filter(item->{
+            return idSet.contains(item.getAttrId());
+        }).map(item->{
+            SkuEsModel.Attrs attrs1 = new SkuEsModel.Attrs();
+            BeanUtils.copyProperties(item,attrs1);
+            return attrs1;
+        }).collect(Collectors.toList());
+
+        // 封装每个sku的信息
+        List<SkuEsModel> uoProducts = skus.stream().map(sku -> {
+            // 组装需要的数据
+            SkuEsModel esModel = new SkuEsModel();
+            // 拷贝
+            BeanUtils.copyProperties(sku,esModel);
+            // 两个对象不同的字段手动设置
+            esModel.setSkuPrice(sku.getPrice());
+            esModel.setSkuImg(sku.getSkuDefaultImg());
+
+            // TODO 1 发送远程调用查询库存系统是否有库存
+
+            // TODO 2 热度评分
+            esModel.setHasScore(0L);
+            // TODO 3 品牌名称和分类信息
+            BrandEntity brand = brandService.getById(esModel.getBrandId());
+            esModel.setBrandName(brand.getName());
+            esModel.setBrandImg(brand.getLogo());
+
+            // 分类信息
+            CategoryEntity category = categoryService.getById(esModel.getCatalogId());
+            esModel.setCatalogName(category.getName());
+
+            // 设置检索属性
+            esModel.setAttrs(attrsList);
+
+            return esModel;
+
+        }).collect(Collectors.toList());
+
+        // TODO 将数据发送给es进行保存
     }
 
 }
