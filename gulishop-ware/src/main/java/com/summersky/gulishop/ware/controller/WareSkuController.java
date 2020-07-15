@@ -1,14 +1,12 @@
 package com.summersky.gulishop.ware.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.summersky.gulishop.ware.vo.HasSkuStockVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.summersky.gulishop.ware.entity.WareSkuEntity;
 import com.summersky.gulishop.ware.service.WareSkuService;
@@ -29,6 +27,18 @@ import com.summersky.common.utils.R;
 public class WareSkuController {
     @Autowired
     private WareSkuService wareSkuService;
+
+    /**
+     * 商品上架时需要调用这个接口来查询sku规格是否有库存
+     * @param skuIds
+     * @return
+     */
+    @PostMapping("/hasstock")
+    public R getHasSkuStock(@RequestBody List<Long> skuIds){
+        List<HasSkuStockVo> vos = wareSkuService.getHasSkuStock(skuIds);
+
+        return R.ok().setData(vos);
+    }
 
     /**
      * 列表

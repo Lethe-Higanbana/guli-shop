@@ -2,11 +2,14 @@ package com.summersky.gulishop.ware.service.impl;
 
 import com.summersky.common.utils.R;
 import com.summersky.gulishop.ware.feign.ProductFeignService;
+import com.summersky.gulishop.ware.vo.HasSkuStockVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,6 +21,9 @@ import com.summersky.gulishop.ware.entity.WareSkuEntity;
 import com.summersky.gulishop.ware.service.WareSkuService;
 
 
+/**
+ * @author Lenovo
+ */
 @Service("wareSkuService")
 public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> implements WareSkuService {
 
@@ -66,6 +72,21 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
         }else{
             wareSkuDao.addStock(skuId,wareId,skuNum);
         }
+    }
+
+    @Override
+    public List<HasSkuStockVo> getHasSkuStock(List<Long> skuIds) {
+        List<HasSkuStockVo> collect = skuIds.stream().map(skuId->{
+            HasSkuStockVo vo = new HasSkuStockVo();
+
+            // 查询sku的总库存量
+            // select sum(stock-stock_locked) from `wms_ware_sku` where sku_id=1
+            Long count = baseMapper.getSkuStock(skuId);
+            vo.setSkuId(skuId);
+            vo.setHasStock(count==null?false:count>0);
+            return vo;
+        }).collect(Collectors.toList());
+        return collect;
     }
 
 }
