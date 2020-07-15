@@ -17,6 +17,9 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   application:
     name: gulishop-product
+# 禁用thymeleaf缓存，达到实时刷新效果
+  thymeleaf:
+    cache: false
 
 
 mybatis-plus:
