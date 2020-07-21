@@ -7,6 +7,9 @@ spring:
         server-addr: 127.0.0.1:8848
   application:
     name: gulishop-search
+# 禁用thymeleaf的缓存，实现即时刷新
+  thymeleaf:
+    cache: false
 
 #    jackson:
 #      date-format: yyyy-MM-dd HH:mm:ss

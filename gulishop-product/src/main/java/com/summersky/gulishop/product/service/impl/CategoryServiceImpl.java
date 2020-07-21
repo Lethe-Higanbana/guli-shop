@@ -8,6 +8,7 @@ import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -98,7 +99,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     /**
      * 级联更新所有关联的数据
      * @param category
+     * 缓存数据一致性：失效模式，修改数据库，删除缓存
+     * @CacheEvict：触发将数据从缓存删除的操作
      */
+    @CacheEvict(value = "category",key = "'level1Categorys'")
     @Transactional
     @Override
     public void updateCascade(CategoryEntity category) {
