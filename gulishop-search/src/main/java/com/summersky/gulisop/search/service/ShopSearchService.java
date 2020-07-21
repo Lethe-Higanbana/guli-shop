@@ -1,6 +1,7 @@
 package com.summersky.gulisop.search.service;
 
 import com.summersky.gulisop.search.vo.SearchParam;
+import com.summersky.gulisop.search.vo.SearchResult;
 
 /**
  * @author Lenovo
@@ -15,5 +16,5 @@ public interface ShopSearchService {
      * @param searchParam  检索的所有参数
      * @return  返回的结果
      */
-    Object search(SearchParam searchParam);
+    SearchResult search(SearchParam searchParam);
 }
