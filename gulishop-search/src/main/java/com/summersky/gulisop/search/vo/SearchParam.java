@@ -28,7 +28,7 @@ public class SearchParam {
     /**
      * 是否有货
      */
-    private Integer hasStock;
+    private Integer hasStock = 1;
     /**
      * 价格区间
      */
@@ -45,5 +45,5 @@ public class SearchParam {
     /**
      * 页码
      */
-    private Integer pageNum;
+    private Integer pageNum = 1;
 }
